@@ -1,0 +1,1 @@
+Fazer os scripts e tudo que envolve código.
