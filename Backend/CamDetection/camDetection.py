@@ -17,13 +17,14 @@ def capture():
             print("Erro ao capturar frame")
             break
 
-        img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Realiza a detecção de objetos
-        results = model(img_rgb)  # Rodar a inferência
-
+        results = model(frame) 
+        
+        
         # A renderização do resultado será no formato de uma lista, então pegamos o primeiro
         annotated_frame = results[0].plot()  # Renderiza a imagem com as caixas de detecção
+        print(results[0][1])
         cv2.imshow("Detecção", annotated_frame)
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
