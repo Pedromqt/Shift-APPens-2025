@@ -1,0 +1,20 @@
+.objective-container{
+    display: flex;
+    height: 100vh;
+    background-color: rgb(236, 236, 236);
+    flex-direction: column;
+    padding: 0rem 7rem 0rem 7rem;
+    gap:2rem;
+}
+
+.objective-title{
+    font-size: 3.5rem;
+    height: 4rem;
+    font-family: Andale Mono, monospace;
+}
+
+.objective-text{
+    font-size: 1.9rem;
+    
+    font-family: Andale Mono, monospace;
+}

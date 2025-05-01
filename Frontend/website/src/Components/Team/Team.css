@@ -1,0 +1,13 @@
+.team-container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(236, 236, 236);
+    padding: 0rem 7rem 0rem 7rem;
+}
+
+.team-title{
+    font-size: 3.5rem;
+    height: 4rem;
+    font-family: Andale Mono, monospace;
+}
