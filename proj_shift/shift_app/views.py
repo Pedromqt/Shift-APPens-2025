@@ -118,3 +118,16 @@ def login_cliente(request):
             return JsonResponse({'erro': str(e)}, status=500)
     else:
         return JsonResponse({'erro': 'Método não permitido'}, status=405)
+
+@csrf_exempt
+def morada_cliente(request,id):
+    if request.method == 'GET':
+        try:
+            cliente = Cliente.objects.get(pk=id)
+            return JsonResponse({'morada': cliente.morada})
+        except Cliente.DoesNotExist:
+            return JsonResponse({'erro': 'Cliente não encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'erro': str(e)}, status=500)
+    else:
+        return JsonResponse({'erro': 'Método não permitido'}, status=405)       
