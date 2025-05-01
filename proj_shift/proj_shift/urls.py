@@ -21,7 +21,9 @@ from shift_app import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('registar_cliente/', views.registar_cliente, name='registar_cliente'),
-    path('remover_cliente/', views.remover_cliente, name='remover_cliente'),
+    path('registar_cliente', views.registar_cliente, name='registar_cliente'),
+    path('remover_cliente/<int:id>', views.remover_cliente, name='remover_cliente'),
+    path('atualizar_cliente/<int:id>', views.atualizar_cliente, name='atualizar_cliente'),
+    path('login_cliente', views.login_cliente, name='login_cliente'),
 
 ]
