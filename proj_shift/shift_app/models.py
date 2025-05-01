@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Cliente(models.Model):
     nome_completo = models.CharField(max_length=120)
+    password = models.CharField(max_length=128)
     email = models.EmailField(unique=True)
     idade = models.PositiveIntegerField(validators=[MinValueValidator(0),MaxValueValidator(150)])
     morada = models.CharField(max_length=200)
