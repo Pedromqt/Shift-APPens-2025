@@ -1,0 +1,13 @@
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['buraco']
+
+roboflow:
+  workspace: projetos-diversos
+  project: localizacao-de-buracos-9mb7f
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/projetos-diversos/localizacao-de-buracos-9mb7f/dataset/2
