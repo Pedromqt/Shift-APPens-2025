@@ -12,11 +12,10 @@ if __name__ == '__main__':
         # Cria as queues
         queueAlerts, queueNavigation = createQueue.createQueues()
 
-        # Inicia a thread de captura
+        # Thread para captura de video
         capture_thread = threading.Thread(
             target=capture,
             args=(stop_event, queueAlerts),
-            
             daemon=True
         )
         capture_thread.start()
@@ -24,23 +23,27 @@ if __name__ == '__main__':
         # Thread para a queue
         process_thread = threading.Thread(
             target=processar_falas,
-           args=(stop_event, queueAlerts, queueNavigation)
+            args=(stop_event, queueAlerts, queueNavigation),
+            daemon=True
         )
         process_thread.start()
         
+        # Thread para assistente de voz
         voice_assistant = threading.Thread(
             target=iniciar_assistente,
-            args=(stop_event, queueNavigation)
+            args=(stop_event, queueNavigation),
+            daemon=True
         )
         voice_assistant.start()
-
-        # Espera ambas as threads terminarem
+        
         capture_thread.join()
+        process_thread.join()
         voice_assistant.join()
-        #process_thread.join()
 
     except KeyboardInterrupt:
         print("\n[INFO] CTRL+C detectado. A encerrar...")
+        stop_event.set()
         capture_thread.join()
+        process_thread.join()
         voice_assistant.join()
         print("[INFO] Programa terminado com sucesso.")
