@@ -15,7 +15,7 @@ def train_model():
 
     
     model.train(
-        data="datasets/data.yaml",  
+        data="datasets1/data.yaml",  
         epochs=25,
         imgsz=640,                  
         batch=8,                    
