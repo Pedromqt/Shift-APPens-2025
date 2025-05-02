@@ -1,0 +1,7 @@
+
+openai>=1.0.0
+gtts
+flask
+python-dotenv
+gpsd-py3        # se usares gps
+mpg123
