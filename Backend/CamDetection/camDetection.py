@@ -1,10 +1,5 @@
 import cv2
 from ultralytics import YOLO
-import time
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from tts import falar
 
 # Carrega os modelos
 model_padrao = YOLO("yolov5s.pt")
@@ -24,13 +19,7 @@ mensagens = {
     'person': "Pessoa à frente."
 }
 
-def alertar(texto):
-    global ultimo_alerta, ultimo_tempo_alerta
-    tempo_atual = time.time()
-    if texto != ultimo_alerta or (tempo_atual - ultimo_tempo_alerta > 5):
-        falar(texto)
-        ultimo_alerta = texto
-        ultimo_tempo_alerta = tempo_atual
+
 
 def boxes_intersect(boxA, boxB):
     xA = max(boxA[0], boxB[0])
@@ -78,8 +67,9 @@ def verificar_alertas(results):
             classe = r.names[int(c)]
             if classe in mensagens:
                 alertar(mensagens[classe])
+                
 def capture():
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(2)
     if not cam.isOpened():
         print("Cam não abriu")
         exit()
@@ -97,10 +87,6 @@ def capture():
 
         # Anotações visuais base
         annotated = results_padrao[0].plot()
-
-        verificar_alertas(results_padrao)
-        verificar_alertas(results_buracos)
-        verificar_alertas(results_sidewalk)
 
         # Verifica e desenha buracos válidos
         buracos_validos = holesFace(results_padrao, results_buracos)
