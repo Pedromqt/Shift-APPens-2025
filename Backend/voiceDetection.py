@@ -7,6 +7,8 @@ import threading
 import openrouteservice
 from flask import Flask, request
 from flask_cors import CORS
+from ai import obter_resposta_da_ia
+from tts import falar
 
 # Configuração da API do OpenRouteService
 ORS_API_KEY = '5b3ce3597851110001cf6248be4f316345c74356a821df1601dbc6cd'
@@ -78,18 +80,10 @@ def interpretar_comando(texto):
                 comando_utilizador = r2.recognize_google(audio, language='pt-PT')
                 print("🗣️ Comando:", comando_utilizador)
                 localizacao_texto, lat, lon = obter_localizacao()
-                partes = comando_utilizador.split("o")
-                comando_utilizador = partes[1]
                 if comando_utilizador:
                     destino_texto = comando_utilizador
-                    geolocator = Nominatim(user_agent="guiar-assistente")
-                    destino_location = geolocator.geocode(destino_texto)
-                    if destino_location:
-                        lat_destino = destino_location.latitude
-                        lon_destino = destino_location.longitude
-                        direcoes = obter_direcoes(lat, lon, lat_destino, lon_destino)
-                        print("\n🤖 Direções para o Polo 2, Coimbra:")
-                        print(direcoes)
+                    resposta=obter_resposta_da_ia(destino_texto,lat,lon)
+                    falar(resposta)
                 execucao_ativa = True
                 thread_localizacao = threading.Thread(target=atualizar_localizacao_continua, args=(comando_utilizador,))
                 thread_localizacao.daemon = True

@@ -3,7 +3,7 @@ from config import OPENAI_API_KEY, MODEL_NAME
 
 # Inicializa cliente
 client = OpenAI(api_key=OPENAI_API_KEY)
-
+print(OPENAI_API_KEY)
 def obter_resposta_da_ia(pergunta: str, lat: float = None, lon: float = None) -> str:
     # Constrói prompt com localização (se fornecida)
     system = 'Estás a ajudar uma pessoa cega com informações úteis.'
