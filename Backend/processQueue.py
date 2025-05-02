@@ -1,0 +1,1 @@
+#import as queues que ja foram criadas e criar uma thread para tratar da queue. A queue dos alerts tem prioridade, a da navegação tem que ir dizendo consoante a loc
