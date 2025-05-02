@@ -28,6 +28,7 @@ def receber_localizacao():
     dados = request.json
     localizacao_atual['lat'] = dados.get('latitude')
     localizacao_atual['lon'] = dados.get('longitude')
+    print(f"📍 Localização recebida do telemóvel: {localizacao_atual['lat']}, {localizacao_atual['lon']}")
     return 'Localização recebida com sucesso.', 200
 
 # Obter morada
