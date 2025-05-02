@@ -1,8 +1,9 @@
 import cv2
 from ultralytics import YOLO
 
-# Carrega o modelo (yolov5s.pt deve estar no mesmo diretório)
-model = YOLO("yolov5s.pt")
+# Carrega os dois modelos
+model_padrao = YOLO("yolov5s.pt")  # ou yolov5s.pt
+model_buracos = YOLO("runs/detect/train/weights/best.pt")
 
 def capture():
     cam = cv2.VideoCapture(0)
@@ -17,16 +18,20 @@ def capture():
             print("Erro ao capturar frame")
             break
 
+        # Inferência dos dois modelos
+        results_padrao = model_padrao(frame)
+        results_buracos = model_buracos(frame)
 
-        # Realiza a detecção de objetos
-        results = model(frame) 
-        
-        
-        # A renderização do resultado será no formato de uma lista, então pegamos o primeiro
-        annotated_frame = results[0].plot()  # Renderiza a imagem com as caixas de detecção
-        print(results[0][1])
-        cv2.imshow("Detecção", annotated_frame)
-        
+        # Renderizar separadamente
+        annotated_padrao = results_padrao[0].plot()
+        annotated_buracos = results_buracos[0].plot()
+
+        # Combinar as duas imagens (usando transparência com addWeighted)
+        annotated_combined = cv2.addWeighted(annotated_padrao, 0.5, annotated_buracos, 0.5, 0)
+
+        # Mostrar
+        cv2.imshow("Detecção Combinada", annotated_combined)
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
