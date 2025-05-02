@@ -26,4 +26,5 @@ urlpatterns = [
     path('atualizar_cliente/<int:id>', views.atualizar_cliente, name='atualizar_cliente'),
     path('login_cliente', views.login_cliente, name='login_cliente'),
     path('morada_cliente/<int:id>', views.morada_cliente, name='morada_cliente'),
+    path('obs_cliente/<int:id>', views.obs_cliente, name='obs_cliente'),
 ]
