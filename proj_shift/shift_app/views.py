@@ -130,4 +130,17 @@ def morada_cliente(request,id):
         except Exception as e:
             return JsonResponse({'erro': str(e)}, status=500)
     else:
-        return JsonResponse({'erro': 'Método não permitido'}, status=405)       
+        return JsonResponse({'erro': 'Método não permitido'}, status=405)
+
+@csrf_exempt
+def obs_cliente(request,id):
+    if request.method == 'GET':
+        try:
+            cliente = Cliente.objects.get(pk=id)
+            return JsonResponse({'observasoes': cliente.observacoes})
+        except Cliente.DoesNotExist:
+            return JsonResponse({'erro': 'Cliente não encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'erro': str(e)}, status=500)
+    else:
+        return JsonResponse({'erro': 'Método não permitido'}, status=405)         
