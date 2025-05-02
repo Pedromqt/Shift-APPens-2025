@@ -83,9 +83,9 @@ def capture(stop_event,alertsQueue):
             break
 
         # Inferência dos modelos
-        results_padrao = model_padrao(frame)
-        results_buracos = model_buracos(frame)
-        results_sidewalk = model_sidewalk(frame)
+        results_padrao = model_padrao(frame,verbose=False)
+        results_buracos = model_buracos(frame,verbose=False)
+        results_sidewalk = model_sidewalk(frame,verbose=False)
 
         verificar_alertas(results_padrao,alertsQueue)
         verificar_alertas(results_buracos,alertsQueue)
