@@ -1,25 +1,26 @@
+import time
 import cv2
 from ultralytics import YOLO
+import threading
+
 
 # Carrega os modelos
 model_padrao = YOLO("yolov5s.pt")
-model_buracos = YOLO("runs/detect/train/weights/best.pt")
-model_sidewalk = YOLO("runs/detect/train2/weights/best.pt")  # Corrigido nome
+model_buracos = YOLO("CamDetection/runs/detect/train/weights/best.pt")
+model_sidewalk = YOLO("CamDetection/runs/detect/train2/weights/best.pt")  # Corrigido nome
 
 # Controle de alertas
 ultimo_alerta = ""
 ultimo_tempo_alerta = 0
 
 # Mensagens de voz
-mensagens = {
+mensagensPrioritarias = {
     'buraco': "Cuidado! Há um buraco à frente.",
     'crosswalk': "Atenção! Passadeira à frente.",
     'red-crossing': "Semáforo vermelho, não passe.",
     'geen-crossing': "Semáforo verde, pode passar.",
-    'person': "Pessoa à frente."
+    'person': "sada",
 }
-
-
 
 def boxes_intersect(boxA, boxB):
     xA = max(boxA[0], boxB[0])
@@ -61,30 +62,35 @@ def holesFace(results_padrao, results_buracos):
 
     return buracos_filtrados
 
-def verificar_alertas(results):
+def verificar_alertas(results,alertsQueue):
     for r in results:
         for c in r.boxes.cls:
             classe = r.names[int(c)]
-            if classe in mensagens:
-                alertar(mensagens[classe])
+            if classe in mensagensPrioritarias:
+                alertsQueue.put(mensagensPrioritarias[classe])
                 
-def capture():
-    cam = cv2.VideoCapture(2)
+                
+def capture(stop_event,alertsQueue):
+    cam = cv2.VideoCapture(0)
     if not cam.isOpened():
         print("Cam não abriu")
         exit()
 
-    while True:
+    while not stop_event.is_set():
         ret, frame = cam.read()
         if not ret:
             print("Erro ao capturar frame")
             break
 
         # Inferência dos modelos
-        results_padrao = model_padrao(frame)
-        results_buracos = model_buracos(frame)
-        results_sidewalk = model_sidewalk(frame)
+        results_padrao = model_padrao(frame,verbose=False)
+        results_buracos = model_buracos(frame,verbose=False)
+        results_sidewalk = model_sidewalk(frame,verbose=False)
 
+        verificar_alertas(results_padrao,alertsQueue)
+        verificar_alertas(results_buracos,alertsQueue)
+        verificar_alertas(results_sidewalk,alertsQueue)
+        
         # Anotações visuais base
         annotated = results_padrao[0].plot()
 
@@ -103,5 +109,3 @@ def capture():
     cam.release()
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    capture()
