@@ -64,7 +64,7 @@ def holesFace(results_padrao, results_buracos):
             pessoas.append(box_padrao.xyxy[0].tolist())
 
     for box_buraco in results_buracos[0].boxes:
-        if box_buraco.conf[0].item() < 0.6:
+        if box_buraco.conf[0].item() < 0.8:
             continue
         x1, y1, x2, y2 = box_buraco.xyxy[0].tolist()
         buraco_box = [x1, y1, x2, y2]
