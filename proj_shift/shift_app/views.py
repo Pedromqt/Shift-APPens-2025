@@ -125,17 +125,13 @@ def login_cliente(request):
 
 
 
+
 @api_view(['GET'])
 def run_script(request):
     print("Executando script...")
     try:
-        # Caminho até a pasta do arquivo atual (provavelmente views.py)
         CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-        # Subir duas pastas para chegar em Shift-APPens-2025/
         PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..'))
-
-        # Caminho para backend/main.py a partir da raiz do projeto
         script_path = os.path.join(PROJECT_ROOT, 'backend', 'main.py')
 
         print(f"Caminho do script: {script_path}")
@@ -143,14 +139,46 @@ def run_script(request):
         if not os.path.isfile(script_path):
             return JsonResponse({'error': f'Script não encontrado: {script_path}'}, status=404)
 
-        print("Executando script...3")
-        subprocess.run(['python', script_path], check=True)
+        # Executa o script em segundo plano
+        process = subprocess.Popen(['python', script_path])
 
-        return JsonResponse({'message': 'Script executado com sucesso!'})
-    except subprocess.CalledProcessError as e:
+        # Salva o PID num arquivo
+        pid_file = os.path.join(PROJECT_ROOT, 'backend', 'main.pid')
+        with open(pid_file, 'w') as f:
+            f.write(str(process.pid))
+
+        return JsonResponse({'message': 'Script executado com sucesso!', 'pid': process.pid})
+    except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-    
-    
+
+import signal
+
+@api_view(['GET'])
+def kill_script(request):
+    try:
+        CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+        PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..'))
+        pid_file = os.path.join(PROJECT_ROOT, 'backend', 'main.pid')
+
+        if not os.path.isfile(pid_file):
+            return JsonResponse({'error': 'Arquivo de PID não encontrado'}, status=404)
+
+        with open(pid_file, 'r') as f:
+            pid = int(f.read())
+
+        # Envia sinal para encerrar o processo
+        os.kill(pid, signal.SIGTERM)
+
+        # Remove o arquivo de PID
+        os.remove(pid_file)
+
+        return JsonResponse({'message': f'Processo {pid} encerrado com sucesso'})
+    except ProcessLookupError:
+        return JsonResponse({'error': f'Nenhum processo encontrado com o PID'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
 @csrf_exempt
 def morada_cliente(request,id):
     if request.method == 'GET':

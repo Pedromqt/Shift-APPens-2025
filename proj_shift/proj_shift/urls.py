@@ -28,4 +28,5 @@ urlpatterns = [
     path('morada_cliente/<int:id>', views.morada_cliente, name='morada_cliente'),
     path('obs_cliente/<int:id>', views.obs_cliente, name='obs_cliente'),
     path('executar_script/', views.run_script, name='executar_script'),
+    path('kill_script/', views.kill_script, name='kill_script'),
 ]
