@@ -106,12 +106,12 @@ def capture(stop_event,alertsQueue):
         buracos_validos = holesFace(results_padrao, results_buracos)
         draw_filtered_holes(annotated, buracos_validos)
 
-        # Desenha deteções de passadeiras/semaforos
+        # Desenha deteções de passadeiras/semaforosj
         draw_sidewalk_detections(annotated, results_sidewalk)
         
-        verificar_alertas(results_padrao, alertsQueue, threshold=0.65)
-        verificar_alertas(results_buracos, alertsQueue, threshold=0.65)
-        verificar_alertas(results_sidewalk, alertsQueue, threshold=0.65)
+        verificar_alertas(results_padrao, alertsQueue, threshold=0.8)
+        verificar_alertas(results_buracos, alertsQueue, threshold=0.8)
+        verificar_alertas(results_sidewalk, alertsQueue, threshold=0.8)
         
         cv2.imshow("Detecção Combinada", annotated)
 
