@@ -1,5 +1,6 @@
 import '../FirstSection/FirstSection.css'
 import { useState,useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const FirstSection = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,7 +30,7 @@ const FirstSection = () => {
         localStorage.removeItem('authToken');
         setIsLoggedIn(false); 
         setUserName('');
-        window.location.href="/";
+        toast.success('Logout realizado com sucesso!');
     }
 
     return (

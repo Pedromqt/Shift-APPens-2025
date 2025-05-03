@@ -1,6 +1,8 @@
 import "../Pages/login.css"
 import { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+
 const Login = () => {
 
     const [formData, setFormData] = useState({
@@ -31,9 +33,13 @@ const Login = () => {
             localStorage.setItem('authToken', response.data.token); // Armazenando o token de autenticação
 
             console.log('Login successful:', response.data);
-            window.location.href = '/'; // Redireciona para a página inicial após o login
+            toast.success('Login realizado com sucesso!');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
         } catch (error) {
             console.error('Error during login:', error);
+            toast.error('Tente novamente.');
         }
     }
 
