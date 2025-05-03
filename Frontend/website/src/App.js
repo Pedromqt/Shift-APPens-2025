@@ -10,23 +10,23 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Homepage />} />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
 
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-              
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
 
-          </Routes>
-          <ToastContainer 
-            position="top-center"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            pauseOnHover
-            theme="colored"
-          />
+
+      </Routes>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
     </BrowserRouter >
   );
 }
