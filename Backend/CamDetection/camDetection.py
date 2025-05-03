@@ -3,11 +3,15 @@ import cv2
 from ultralytics import YOLO
 import threading
 
+import os
+# Caminho base onde está este script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Carrega os modelos
-model_padrao = YOLO("yolov5s.pt")
-model_buracos = YOLO("CamDetection/runs/detect/train/weights/best.pt")
-model_sidewalk = YOLO("CamDetection/runs/detect/train2/weights/best.pt")  # Corrigido nome
+# Caminhos relativos para os modelos
+# Carregar os modelos com YOLO
+model_padrao = YOLO(os.path.join(BASE_DIR, "yolov5s.pt"))
+model_buracos = YOLO(os.path.join(BASE_DIR,"runs", "detect", "train", "weights", "best.pt"))
+model_sidewalk = YOLO(os.path.join(BASE_DIR,"runs", "detect", "train2", "weights", "best.pt"))
 
 # Controle de alertas
 ultimo_alerta = ""

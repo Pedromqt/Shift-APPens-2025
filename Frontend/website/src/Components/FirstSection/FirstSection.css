@@ -25,3 +25,27 @@
     font-size: 2.5rem;
     font-family: Andale Mono, monospace;
 }
+
+.registerButtons{
+    width: 19%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.register-button{
+    width: fit-content;
+    padding: 0.7rem;
+    border: solid 2px grey;
+    border-radius: 12px;
+    color:rgb(16, 185, 129);
+    font-size: 1.5rem;
+    font-family: Andale Mono, monospace;
+    background-color: transparent;
+}
+
+.register-button:hover{
+    background-color: rgb(198, 198, 198);
+    cursor: pointer;
+}
