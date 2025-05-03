@@ -4,12 +4,14 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 from .models import Cliente
 
 @csrf_exempt
+@api_view(['POST'])
 def registar_cliente(request):
     if request.method == 'POST':
         try:
@@ -94,6 +96,7 @@ def atualizar_cliente(request, id):
 
 
 @csrf_exempt
+@api_view(['POST'])
 def login_cliente(request):
     if request.method == 'POST':
         try:

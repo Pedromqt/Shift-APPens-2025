@@ -21,10 +21,10 @@ from shift_app import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('registar_cliente', views.registar_cliente, name='registar_cliente'),
+    path('registar_cliente/', views.registar_cliente, name='registar_cliente'),
     path('remover_cliente/<int:id>', views.remover_cliente, name='remover_cliente'),
     path('atualizar_cliente/<int:id>', views.atualizar_cliente, name='atualizar_cliente'),
-    path('login_cliente', views.login_cliente, name='login_cliente'),
+    path('login_cliente/', views.login_cliente, name='login_cliente'),
     path('morada_cliente/<int:id>', views.morada_cliente, name='morada_cliente'),
     path('obs_cliente/<int:id>', views.obs_cliente, name='obs_cliente'),
 ]
