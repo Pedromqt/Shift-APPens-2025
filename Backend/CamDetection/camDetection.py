@@ -46,7 +46,7 @@ def draw_sidewalk_detections(frame, results):
     for r in results:
         for box in r.boxes:
             conf = box.conf[0].item()
-            if conf < 0.8:
+            if conf < 0.6:
                 continue
             cls_idx = int(box.cls[0].item())
             label_name = r.names[cls_idx]
@@ -64,7 +64,7 @@ def holesFace(results_padrao, results_buracos):
             pessoas.append(box_padrao.xyxy[0].tolist())
 
     for box_buraco in results_buracos[0].boxes:
-        if box_buraco.conf[0].item() < 0.8:
+        if box_buraco.conf[0].item() < 0.6:
             continue
         x1, y1, x2, y2 = box_buraco.xyxy[0].tolist()
         buraco_box = [x1, y1, x2, y2]
@@ -74,7 +74,7 @@ def holesFace(results_padrao, results_buracos):
 
     return buracos_filtrados
 
-def verificar_alertas(results, alertsQueue, threshold=0.65):
+def verificar_alertas(results, alertsQueue, threshold=0.6):
     for r in results:
         for box in r.boxes:
             conf = box.conf[0].item()
@@ -87,7 +87,7 @@ def verificar_alertas(results, alertsQueue, threshold=0.65):
                 
                 
 def capture(stop_event,alertsQueue):
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(1)
     if not cam.isOpened():
         print("Cam não abriu")
         exit()
@@ -113,9 +113,9 @@ def capture(stop_event,alertsQueue):
         # Desenha deteções de passadeiras/semaforosj
         draw_sidewalk_detections(annotated, results_sidewalk)
         
-        verificar_alertas(results_padrao, alertsQueue, threshold=0.8)
-        verificar_alertas(results_buracos, alertsQueue, threshold=0.8)
-        verificar_alertas(results_sidewalk, alertsQueue, threshold=0.8)
+        verificar_alertas(results_padrao, alertsQueue, threshold=0.6)
+        verificar_alertas(results_buracos, alertsQueue, threshold=0.6)
+        verificar_alertas(results_sidewalk, alertsQueue, threshold=0.6)
         
         cv2.imshow("Detecção Combinada", annotated)
 
