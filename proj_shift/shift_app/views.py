@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render
 
+import subprocess
 # Create your views here.
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -121,6 +122,20 @@ def login_cliente(request):
             return JsonResponse({'erro': str(e)}, status=500)
     else:
         return JsonResponse({'erro': 'Método não permitido'}, status=405)
+
+
+
+@api_view(['GET'])
+def run_script(request):
+    try:
+        subprocess.run(
+            ['python', 'C:\\Users\\PC\\Desktop\\Shift-APPens-2025\\backend\\main.py'],
+            check=True
+        )
+        return JsonResponse({'message': 'Script executado com sucesso!'})
+    except subprocess.CalledProcessError as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
 
 @csrf_exempt
 def morada_cliente(request,id):

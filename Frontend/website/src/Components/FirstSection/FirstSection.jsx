@@ -1,11 +1,31 @@
 import '../FirstSection/FirstSection.css'
 import { useState,useEffect } from 'react';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const FirstSection = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState(''); 
-    
+    const [handleSoftwareflag, setHandleSoftwareflag] = useState(false);
+
+    const handleSoftware = async () => {
+        try {
+          const response = await axios.get('http://127.0.0.1:8000/executar_script/');
+          const data = await response.json();
+      
+          if (response.ok) {
+            toast.success(data.message || 'A iniciar Software!');
+          } else {
+            toast.error(data.error || 'Erro ao iniciar o software.');
+          }
+        } catch (error) {
+          toast.error('Erro na comunicação com o servidor.');
+          console.error(error);
+        }
+      };
+      
+
+
     useEffect(() => {
         const userData = localStorage.getItem('userData');
         if (userData) {
@@ -52,8 +72,10 @@ const FirstSection = () => {
             para guiar quem mais precisa
         </div>
         {isLoggedIn ? (
-                <button className='register-button' onClick={handleLogout}>Sair</button>
-            ) : (
+                <>
+                    <button className='register-button' onClick={handleSoftware}>Ligar Software</button>
+                    <button className='register-button' onClick={handleLogout}>Sair</button>
+                </>) : (
                 <div className='registerButtons'>
                     <button className='register-button' onClick={() => handlePage(0)}>Registrar</button>
                     <button className='register-button' onClick={() => handlePage(1)}>Entrar</button>
