@@ -18,8 +18,7 @@ mensagensPrioritarias = {
     'buraco': "Cuidado! Há um buraco à frente.",
     'crosswalk': "Atenção! Passadeira à frente.",
     'red-crossing': "Semáforo vermelho, não passe.",
-    'geen-crossing': "Semáforo verde, pode passar.",
-    'person': "sada",
+    'geen-crossing': "Semáforo verde, pode passar."
 }
 
 def boxes_intersect(boxA, boxB):
@@ -115,6 +114,10 @@ def capture(stop_event,alertsQueue):
         draw_sidewalk_detections(annotated, results_sidewalk)
 
         cv2.imshow("Detecção Combinada", annotated)
+        
+        verificar_alertas(buracos_validos,alertsQueue)
+        verificar_alertas(results_sidewalk,alertsQueue)
+
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

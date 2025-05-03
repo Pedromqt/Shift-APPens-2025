@@ -8,6 +8,7 @@ OpenStreetMap tem acesso em tempo real a tudo, multibancos, estradas, semáforos
 
 # Como executar o software:
 Ter câmara, microfone e áudio ligados.
+Entrar no .env e colocar uma chave de openai.
 cd .\Backend\
 pip install -r ./requirements.txt
 python main.py
