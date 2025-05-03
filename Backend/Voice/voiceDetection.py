@@ -83,17 +83,11 @@ def interpretar_comando(texto, queueNavigation):
         thread_localizacao = threading.Thread(target=atualizar_localizacao_continua, args=(comando_utilizador,))
         thread_localizacao.daemon = True
         # thread_localizacao.start()
-        print("🛑 Para parar as direções, diga 'para guiar' no próximo prompt")
+        print("🛑 Para parar as direções, use a tecla 'p' para interromper a navegação.")
 
-    elif "para guiar" in texto or "parar guiar" in texto:
-        execucao_ativa = False
-        if thread_localizacao and thread_localizacao.is_alive():
-            print("🛑 Parando navegação...")
-            time.sleep(1.5)
-            print("✅ Navegação finalizada!")
+    # Não há mais a parte de parar guiar aqui
     else:
         print("⛔ Ignorado. O comando não começa com 'ativar guiar'.")
-
 
 # Atualização contínua
 def atualizar_localizacao_continua(destino):
@@ -117,10 +111,7 @@ def ouvir_microfone(stop_event, queueNavigation):
     r = sr.Recognizer()
     while not stop_event.is_set():
         with sr.Microphone() as source:
-            if execucao_ativa:
-                print("🎤 Diz 'Para Guiar' para encerrar a navegação...")
-            else:
-                print("🎤 Diz 'Ativar guiar com a mensagem á frente para comecar' para começar...")
+            print("🎤 Diz 'Ativar guiar' com a mensagem á frente para começar...")
             audio = r.listen(source)
         try:
             comando = r.recognize_google(audio, language='pt-PT')
