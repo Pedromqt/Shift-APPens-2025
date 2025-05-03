@@ -16,15 +16,17 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include 
 from shift_app import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('registar_cliente', views.registar_cliente, name='registar_cliente'),
+    path('registar_cliente/', views.registar_cliente, name='registar_cliente'),
     path('remover_cliente/<int:id>', views.remover_cliente, name='remover_cliente'),
     path('atualizar_cliente/<int:id>', views.atualizar_cliente, name='atualizar_cliente'),
-    path('login_cliente', views.login_cliente, name='login_cliente'),
+    path('login_cliente/', views.login_cliente, name='login_cliente'),
     path('morada_cliente/<int:id>', views.morada_cliente, name='morada_cliente'),
     path('obs_cliente/<int:id>', views.obs_cliente, name='obs_cliente'),
+    path('executar_script/', views.run_script, name='executar_script'),
+    path('kill_script/', views.kill_script, name='kill_script'),
 ]

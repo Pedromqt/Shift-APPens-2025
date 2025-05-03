@@ -3,11 +3,15 @@ import cv2
 from ultralytics import YOLO
 import threading
 
+import os
+# Caminho base onde está este script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Carrega os modelos
-model_padrao = YOLO("yolov5s.pt")
-model_buracos = YOLO("CamDetection/runs/detect/train/weights/best.pt")
-model_sidewalk = YOLO("CamDetection/runs/detect/train2/weights/best.pt")  # Corrigido nome
+# Caminhos relativos para os modelos
+# Carregar os modelos com YOLO
+model_padrao = YOLO(os.path.join(BASE_DIR, "yolov5s.pt"))
+model_buracos = YOLO(os.path.join(BASE_DIR,"runs", "detect", "train", "weights", "best.pt"))
+model_sidewalk = YOLO(os.path.join(BASE_DIR,"runs", "detect", "train2", "weights", "best.pt"))
 
 # Controle de alertas
 ultimo_alerta = ""
@@ -18,8 +22,7 @@ mensagensPrioritarias = {
     'buraco': "Cuidado! Há um buraco à frente.",
     'crosswalk': "Atenção! Passadeira à frente.",
     'red-crossing': "Semáforo vermelho, não passe.",
-    'geen-crossing': "Semáforo verde, pode passar.",
-    'person': "sada",
+    'geen-crossing': "Semáforo verde, pode passar."
 }
 
 def boxes_intersect(boxA, boxB):
@@ -33,16 +36,23 @@ def boxes_intersect(boxA, boxB):
 def draw_filtered_holes(frame, boxes):
     for box in boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+        conf = box.conf[0].item()
+        label = f"Buraco {conf:.2f}"
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
-        cv2.putText(frame, "Buraco", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+        cv2.putText(frame, label, (x1, y1 - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
 def draw_sidewalk_detections(frame, results):
     for r in results:
         for box in r.boxes:
+            conf = box.conf[0].item()
+            if conf < 0.6:
+                continue
             cls_idx = int(box.cls[0].item())
-            label = r.names[cls_idx]
+            label_name = r.names[cls_idx]
+            label = f"{label_name} {conf:.2f}"
             x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
-            color = (255, 255, 0) if label == "crosswalk" else (0, 255, 0) if label == "green-crossing" else (0, 0, 255)
+            color = (255, 255, 0) if label_name == "crosswalk" else (0, 255, 0) if label_name == "green-crossing" else (0, 0, 255)
             cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
             cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
@@ -54,6 +64,8 @@ def holesFace(results_padrao, results_buracos):
             pessoas.append(box_padrao.xyxy[0].tolist())
 
     for box_buraco in results_buracos[0].boxes:
+        if box_buraco.conf[0].item() < 0.6:
+            continue
         x1, y1, x2, y2 = box_buraco.xyxy[0].tolist()
         buraco_box = [x1, y1, x2, y2]
         sobrepoe_pessoa = any(boxes_intersect(buraco_box, pessoa_box) for pessoa_box in pessoas)
@@ -62,16 +74,20 @@ def holesFace(results_padrao, results_buracos):
 
     return buracos_filtrados
 
-def verificar_alertas(results,alertsQueue):
+def verificar_alertas(results, alertsQueue, threshold=0.6):
     for r in results:
-        for c in r.boxes.cls:
-            classe = r.names[int(c)]
+        for box in r.boxes:
+            conf = box.conf[0].item()
+            if conf < threshold:
+                continue
+            cls_idx = int(box.cls[0].item())
+            classe = r.names[cls_idx]
             if classe in mensagensPrioritarias:
                 alertsQueue.put(mensagensPrioritarias[classe])
                 
                 
 def capture(stop_event,alertsQueue):
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(1)
     if not cam.isOpened():
         print("Cam não abriu")
         exit()
@@ -86,10 +102,6 @@ def capture(stop_event,alertsQueue):
         results_padrao = model_padrao(frame,verbose=False)
         results_buracos = model_buracos(frame,verbose=False)
         results_sidewalk = model_sidewalk(frame,verbose=False)
-
-        verificar_alertas(results_padrao,alertsQueue)
-        verificar_alertas(results_buracos,alertsQueue)
-        verificar_alertas(results_sidewalk,alertsQueue)
         
         # Anotações visuais base
         annotated = results_padrao[0].plot()
@@ -98,9 +110,13 @@ def capture(stop_event,alertsQueue):
         buracos_validos = holesFace(results_padrao, results_buracos)
         draw_filtered_holes(annotated, buracos_validos)
 
-        # Desenha deteções de passadeiras/semaforos
+        # Desenha deteções de passadeiras/semaforosj
         draw_sidewalk_detections(annotated, results_sidewalk)
-
+        
+        verificar_alertas(results_padrao, alertsQueue, threshold=0.6)
+        verificar_alertas(results_buracos, alertsQueue, threshold=0.6)
+        verificar_alertas(results_sidewalk, alertsQueue, threshold=0.6)
+        
         cv2.imshow("Detecção Combinada", annotated)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):

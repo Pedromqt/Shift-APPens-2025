@@ -1,3 +1,4 @@
+
 from ai import obter_resposta_da_ia
 from Backend.Voice.tts2 import falar
 
