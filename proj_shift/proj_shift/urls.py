@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include 
 from shift_app import views
 
 urlpatterns = [
@@ -27,5 +27,5 @@ urlpatterns = [
     path('login_cliente/', views.login_cliente, name='login_cliente'),
     path('morada_cliente/<int:id>', views.morada_cliente, name='morada_cliente'),
     path('obs_cliente/<int:id>', views.obs_cliente, name='obs_cliente'),
-    path('executar_script/', views.run_script),
+    path('executar_script/', views.run_script, name='executar_script'),
 ]

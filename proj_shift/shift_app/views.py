@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-
+import os
 import subprocess
 # Create your views here.
 from django.http import JsonResponse
@@ -127,16 +127,30 @@ def login_cliente(request):
 
 @api_view(['GET'])
 def run_script(request):
+    print("Executando script...")
     try:
-        subprocess.run(
-            ['python', 'C:\\Users\\PC\\Desktop\\Shift-APPens-2025\\backend\\main.py'],
-            check=True
-        )
+        # Caminho até a pasta do arquivo atual (provavelmente views.py)
+        CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+        # Subir duas pastas para chegar em Shift-APPens-2025/
+        PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..'))
+
+        # Caminho para backend/main.py a partir da raiz do projeto
+        script_path = os.path.join(PROJECT_ROOT, 'backend', 'main.py')
+
+        print(f"Caminho do script: {script_path}")
+
+        if not os.path.isfile(script_path):
+            return JsonResponse({'error': f'Script não encontrado: {script_path}'}, status=404)
+
+        print("Executando script...3")
+        subprocess.run(['python', script_path], check=True)
+
         return JsonResponse({'message': 'Script executado com sucesso!'})
     except subprocess.CalledProcessError as e:
         return JsonResponse({'error': str(e)}, status=500)
-
-
+    
+    
 @csrf_exempt
 def morada_cliente(request,id):
     if request.method == 'GET':
