@@ -98,10 +98,6 @@ def capture(stop_event,alertsQueue):
         results_padrao = model_padrao(frame,verbose=False)
         results_buracos = model_buracos(frame,verbose=False)
         results_sidewalk = model_sidewalk(frame,verbose=False)
-
-        verificar_alertas(results_padrao, alertsQueue, threshold=0.65)
-        verificar_alertas(results_buracos, alertsQueue, threshold=0.65)
-        verificar_alertas(results_sidewalk, alertsQueue, threshold=0.65)
         
         # Anotações visuais base
         annotated = results_padrao[0].plot()
@@ -112,12 +108,12 @@ def capture(stop_event,alertsQueue):
 
         # Desenha deteções de passadeiras/semaforos
         draw_sidewalk_detections(annotated, results_sidewalk)
-
-        cv2.imshow("Detecção Combinada", annotated)
         
-        verificar_alertas(buracos_validos,alertsQueue)
-        verificar_alertas(results_sidewalk,alertsQueue)
-
+        verificar_alertas(results_padrao, alertsQueue, threshold=0.65)
+        verificar_alertas(results_buracos, alertsQueue, threshold=0.65)
+        verificar_alertas(results_sidewalk, alertsQueue, threshold=0.65)
+        
+        cv2.imshow("Detecção Combinada", annotated)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
