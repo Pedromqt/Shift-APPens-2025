@@ -3,9 +3,8 @@ import platform
 import tempfile
 from gtts import gTTS
 import time
-import threading
-import keyboard  # Usaremos o módulo keyboard para capturar a tecla 'p'
-import pygame  # Vamos usar pygame para o controle do áudio no Windows
+import pygame  # Usaremos pygame para o controle do áudio no Windows
+import keyboard  # Vamos usar o módulo keyboard para capturar a tecla 'p'
 
 # Variável global para controlar se a fala deve ser interrompida
 falar_interrompido = False
@@ -62,15 +61,10 @@ def falar(texto: str):
 
     os.remove(ficheiro)
 
-# Função para escutar o evento de pressionamento de tecla
+# Controle da tecla de interrupção diretamente no fluxo principal
 def escutar_teclas():
     while True:
         if keyboard.is_pressed('p'):  # Se a tecla 'p' for pressionada
             interromper_falar()
             print("🛑 Fala interrompida pelo usuário.")
             time.sleep(0.1)  # Previne que a interrupção aconteça múltiplas vezes de forma rápida
-
-# Inicia a escuta das teclas em uma thread separada
-t = threading.Thread(target=escutar_teclas)
-t.daemon = True
-t.start()
