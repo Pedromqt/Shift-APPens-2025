@@ -65,42 +65,29 @@ def obter_direcoes(lat_inicial, lon_inicial, lat_destino, lon_destino):
     except Exception as e:
         return f"❗ Erro ao obter direções: {str(e)}"
 
-# Comando de voz
-def interpretar_comando(texto,queueNavigation):
+def interpretar_comando(texto, queueNavigation):
     global execucao_ativa, thread_localizacao
-    texto = texto.lower()
-    if "olá" in texto:
-        print("🟢 Dispositivo ligado!")
-        r2 = sr.Recognizer()
-        while True:
-            with sr.Microphone() as source:
-                print("🎤 À espera de comandos...")
-                audio = r2.listen(source)
-            try:
-                comando_utilizador = r2.recognize_google(audio, language='pt-PT')
-                print("🗣️ Comando:", comando_utilizador)
-                localizacao_texto, lat, lon = obter_localizacao()
-                if comando_utilizador:
-                    destino_texto = comando_utilizador
-                    resposta=obter_resposta_da_ia(destino_texto,lat,lon)
-                    queueNavigation.put(resposta)
-                execucao_ativa = True
-                thread_localizacao = threading.Thread(target=atualizar_localizacao_continua, args=(comando_utilizador,))
-                thread_localizacao.daemon = True
-                #thread_localizacao.start()
-                print("\n🛑 Para parar as direções, diga 'para guiar' no próximo prompt")
-            except sr.UnknownValueError:
-                print("❗ Não percebi o comando.")
-            except sr.RequestError:
-                print("❗ Erro ao aceder ao serviço de reconhecimento.")
-    elif "para guiar" in texto or "parar guiar" in texto:
-        execucao_ativa = False
-        if thread_localizacao and thread_localizacao.is_alive():
-            print("🛑 Parando navegação...")
-            time.sleep(1.5)
-            print("✅ Navegação finalizada!")
+    texto = texto.lower().strip()
+
+    # Apenas processa se começar com 'ativar guiar' ou 'olá guiar'
+    if texto.startswith("ativar guiar"):
+        comando_utilizador = texto.split(" ", 2)[-1] if len(texto.split()) > 2 else ""
+        print("🟢 Dispositivo ligado e comando recebido:", comando_utilizador)
+
+        localizacao_texto, lat, lon = obter_localizacao()
+        if comando_utilizador:
+            resposta = obter_resposta_da_ia(comando_utilizador, lat, lon)
+            queueNavigation.put(resposta)
+
+        execucao_ativa = True
+        thread_localizacao = threading.Thread(target=atualizar_localizacao_continua, args=(comando_utilizador,))
+        thread_localizacao.daemon = True
+        # thread_localizacao.start()
+        print("🛑 Para parar as direções, use a tecla 'p' para interromper a navegação.")
+
+    # Não há mais a parte de parar guiar aqui
     else:
-        print("Comando de ativação não reconhecido.")
+        print("⛔ Ignorado. O comando não começa com 'ativar guiar'.")
 
 # Atualização contínua
 def atualizar_localizacao_continua(destino):
@@ -124,10 +111,7 @@ def ouvir_microfone(stop_event, queueNavigation):
     r = sr.Recognizer()
     while not stop_event.is_set():
         with sr.Microphone() as source:
-            if execucao_ativa:
-                print("🎤 Diz 'Para Guiar' para encerrar a navegação...")
-            else:
-                print("🎤 Diz 'Olá Guiar' para começar...")
+            print("🎤 Diz 'Ativar guiar' com a mensagem á frente para começar...")
             audio = r.listen(source)
         try:
             comando = r.recognize_google(audio, language='pt-PT')
