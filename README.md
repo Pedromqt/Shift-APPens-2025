@@ -9,6 +9,19 @@ Geolocalização contínua com atualizações frequentes via GPS ou IP, para aju
 Interação por voz, permitindo que o utilizador indique o destino e receba instruções de forma auditiva, sem necessidade de interação visual ou tátil.
 Informação urbana em tempo real, incluindo localização de passadeiras, semáforos, estradas e vias pedonais, com especial atenção a cidades com maior densidade de infraestrutura.
 
+# Tecnologias usadas:
+## Frontend
+Django
+React js
+Node.js
+JavaScript, CSS          
+
+## Backend
+Python
+Django
+YOLO
+OpenCV, Flask, Geopy, SpeechRecognition, TTS, pygame, openAI, torch
+
 # Como executar o software:
 Ter câmara, microfone e áudio ligados.
 Entrar no .env e colocar uma chave de openai.
