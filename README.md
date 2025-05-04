@@ -1,10 +1,13 @@
 # Shift-APPens-2025
 Shift APPens Project - Hackathon 2025 - Coimbra, Portugal
 
-Sistema que guia o cego para locais especificos. Usa algoritmos para detetar os melhores caminhos com base na distância, evitando escadas, obstáculos perigosos, escadas rolantes e etc.
-Podemos usar camara para detetar buracos em tempo real ao longo do caminho.
-Podemos usar um bd para marcar locais especificos como casa e outros locais de preferencia.
-OpenStreetMap tem acesso em tempo real a tudo, multibancos, estradas, semáforos, vias pedonais para pessoas, etc. Em localidades maiores tem acesso a passadeiras.
+# Objetivo
+Desenvolver um assistente inteligente de navegação para pessoas cegas que utiliza comandos auditivos para orientar o utilizador de forma segura até ao seu destino. O sistema combina diversas tecnologias para garantir uma navegação autónoma, eficiente e segura:
+Deteção de obstáculos em tempo real com uso de câmaras e modelos de visão computacional (YOLO), capazes de identificar buracos, objetos no caminho, entre outros perigos.
+Planeamento de rotas.
+Geolocalização contínua com atualizações frequentes via GPS ou IP, para ajustar rotas em tempo real e garantir precisão durante o percurso.
+Interação por voz, permitindo que o utilizador indique o destino e receba instruções de forma auditiva, sem necessidade de interação visual ou tátil.
+Informação urbana em tempo real, incluindo localização de passadeiras, semáforos, estradas e vias pedonais, com especial atenção a cidades com maior densidade de infraestrutura.
 
 # Como executar o software:
 Ter câmara, microfone e áudio ligados.
